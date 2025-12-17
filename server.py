@@ -11,8 +11,8 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from models.schema import SectorValidator, ALLOWED_SECTORS
 from security.jwt import create_access_token
-from datetime import timedelta
 from security.auth import get_current_user
+from utils.session import track_session, get_session_info
 
 
 app = FastAPI()
@@ -96,6 +96,11 @@ async def analyze_sector(
     # Validate sector
     validated_sector = SectorValidator(sector=sector).sector
     
+    # Track user session
+    client_ip = request.client.host
+    track_session(client_ip)
+    session_info = get_session_info(client_ip)
+    
     # Fetch market news
     raw_data = await fetch_market_news(validated_sector)
     
@@ -112,6 +117,7 @@ async def analyze_sector(
         "sector": validated_sector,
         "report": report,
         "saved_to": saved_path,
-        "message": f"Report saved successfully to {saved_path}"
+        "message": f"Report saved successfully to {saved_path}",
+        "session": session_info
     }
 
