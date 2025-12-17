@@ -6,6 +6,7 @@ from services.ai_service import analyze_sector as ai_analyze_sector
 from security.rate_limit import limiter
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from models.schema import SectorValidator
 
 app = FastAPI()
 
@@ -25,8 +26,11 @@ async def home():
 @app.get("/analyze/{sector}")
 @limiter.limit(f"{settings.RATE_LIMIT}/minute")
 async def analyze_sector(request: Request, sector: str):
+    # Validate sector
+    validated_sector = SectorValidator(sector=sector).sector
+    
     # Fetch market news
-    raw_data = await fetch_market_news(sector)
+    raw_data = await fetch_market_news(validated_sector)
     
     # Get AI analysis
     analysis = await ai_analyze_sector(sector, raw_data)
