@@ -13,7 +13,7 @@ A FastAPI-based REST API that provides AI-powered market analysis for Indian sec
 - Session tracking by IP
 - Input validation for allowed sectors
 
-## Supported Sectors (configurable)
+## Supported Sectors (configurable)v
 
 - Pharmaceuticals
 - Technology
@@ -89,6 +89,25 @@ PORT=8000
 HOST=0.0.0.0
 ENVIRONMENT=development
 ```
+
+### 5. Install pre-commit hooks (Recommended)
+
+Set up pre-commit hooks for automatic code linting and formatting:
+
+```bash
+# Install pre-commit hooks
+uv run pre-commit install
+
+# (Optional) Run on all files to check
+uv run pre-commit run --all-files
+```
+
+Pre-commit will now automatically run on every commit to:
+
+- Format code with Ruff
+- Check for common issues
+- Detect security vulnerabilities with Bandit
+- Validate YAML, JSON, and TOML files
 
 ## Running the Application
 
@@ -183,6 +202,27 @@ uv run ./main.py
 ```
 
 The server will automatically reload when you make changes to the code.
+
+### Code Quality Tools
+
+This project uses pre-commit hooks for code quality:
+
+- **Ruff**: Fast Python linter and formatter (replaces flake8, black, isort)
+- **Bandit**: Security vulnerability scanner
+- **Pre-commit hooks**: Auto-checks on commit
+
+Manual linting commands:
+
+```bash
+# Run Ruff linter
+uv run ruff check .
+
+# Run Ruff formatter
+uv run ruff format .
+
+# Run all pre-commit hooks manually
+uv run pre-commit run --all-files
+```
 
 ## Error Handling
 
